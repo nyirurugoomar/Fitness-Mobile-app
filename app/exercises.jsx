@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,14 +9,16 @@ import { fetchExercisesByBodypart } from "../api/exerciseDB";
 import { demoExercises } from "../constants";
 import { StatusBar } from "expo-status-bar";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import ExercisesList from "../components/ExercisesList";
+import { ScrollView } from "react-native-virtualized-view";
 function exercises() {
   const router = useRouter();
   const item = useLocalSearchParams();
-  const [exercises, setExercises] = useState(demoExercises);
-  console.log("got item:", item);
+  const [exercises, setExercises] = useState([]);
+  //   console.log("got item:", item);
 
   useEffect(() => {
-    // if (item) getExercises(item.name);
+    if (item) getExercises(item.name);
   }, [item]);
 
   const getExercises = async (bodypart) => {
@@ -44,7 +46,15 @@ function exercises() {
       {/* exercises */}
 
       <View className="mx-4 space-y-3 mt-4">
-        <Text>{item.name} exercise</Text>
+        <Text
+          style={{ fontSize: hp(3) }}
+          className="font-semibold text-neutral-700"
+        >
+          {item.name} exercise
+        </Text>
+        <View className="mb-10">
+          <ExercisesList data={exercises} />
+        </View>
       </View>
     </ScrollView>
   );
